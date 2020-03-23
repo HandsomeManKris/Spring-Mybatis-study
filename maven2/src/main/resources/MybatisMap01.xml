@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--映射文件-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 根据id 查询
+id:statement的id,要求命名空间的唯一
+parameterType:入参的java类型
+resultType:查询出单条结果集对应的java类型
+#{}：表示一个占位符
+#{id}表示该占位符等待接收参数的名称为id
+注意：如果参数为简单类型时，#{}里面的参数名称可以是任何定义-->
+
+
+<mapper namespace="com.mybatisdays.dao.StudentInterfaceMapper">
+    <!--添加数据，一条-->
+    <insert id="insertStudent" parameterType="com.mybatisdays.Student">
+        insert into student values(#{id},#{create_at},#{update_at},#{name},#{QQ},#{type_job},#{date},
+        #{school},#{number_online},#{daily},#{dream},#{brother},#{where_know})
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+    <!--精确查询-->
+    <select id="selectStudent" parameterType="int" resultType="com.mybatisdays.Student">
+        select * from student where id = #{id}
+    </select>
+    <!--更新一条数据-->
+    <select id="updateStudent" parameterType="com.mybatisdays.Student">
+        update student set name = #{name},type_job = #{type_job} where id = #{id}
+    </select>
+    <!--删除一条数据-->
+    <select id="deleteId" parameterType="int">
+        delete from student where id = #{id}
+    </select>
+    <!--模糊查询-->
+    <select id="findStudents" parameterType="String" resultType="com.mybatisdays.Student">
+        select * from student where name like concat('%',#{name},'%')
+    </select>
+    <!--多条模糊查询-->
+    <select id="mapFindStudents" parameterType="com.mybatisdays.Student" resultType="com.mybatisdays.Student">
+        select * from student where id>#{id} and name like concat('%',#{name},'%')
+    </select>
+    <!--全部查询-->
+    <select id="selectStudents" resultType="com.mybatisdays.Student">
+        select * from student
+    </select>
+
+</mapper>

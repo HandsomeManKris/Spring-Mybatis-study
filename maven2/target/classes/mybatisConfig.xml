@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--这个文件叫做全局配置文件-->
+<configuration>
+    <!--开发环境-->
+    <environments default="development">
+        <environment id="development">
+            <!--配置数据源-->
+            <transactionManager type="JDBC"></transactionManager>
+
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/xiuzhenyuan?serverTimezone=GMT&amp;characterEncoding=utf8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="@Fzy19930905"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--扫描mybatis的实现，可以扫描多个xml文件-->
+        <mapper resource="MybatisMap01.xml"></mapper>
+        <!--
+        <mapper resource="UserMapper.xml"></mapper>
+        -->
+    </mappers>
+</configuration>

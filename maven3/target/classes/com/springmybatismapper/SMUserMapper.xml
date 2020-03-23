@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springmybatismapper.SMUserMapper">
+    <insert id="insertStudent" parameterType="com.springmybatismapper.SMUser">
+        insert into user1(name,password) values(#{name},#{password})
+    </insert>
+    <select id="selectStudent" parameterType="int" resultType="com.springmybatismapper.SMUser">
+        select * from user1 where id = #{id}
+    </select>
+    <update id="updateStudent" parameterType="com.springmybatismapper.SMUser">
+        update user1 set name = #{name},password = #{password} where id = #{id}
+    </update>
+    <delete id="deleteStudent" parameterType="int">
+        delete from user1 where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springmybatismapper.StudentMapper">
+    <insert id="insertStudent" parameterType="com.springmybatismapper.Student">
+        insert into student(create_at,update_at,name,QQ,type_job,date,school,number_online,daily,dream,brother,where_know)
+         values(#{create_at},#{update_at},#{name},#{QQ},#{type_job},#{date},
+        #{school},#{number_online},#{daily},#{dream},#{brother},#{where_know})
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+    <select id="selectStudent" parameterType="int" resultType="com.springmybatismapper.Student">
+        select * from student where id = #{id}
+    </select>
+    <update id="updateStudent" parameterType="com.springmybatismapper.Student">
+        update student set name = #{name},type_job = #{type_job} where id = #{id}
+    </update>
+    <delete id="deleteStudent" parameterType="int">
+        delete from student where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <context:property-placeholder location="classpath:db.properties"/>
+    <!--自动扫瞄 -->
+    <context:component-scan base-package="com.springmybatismapper"/>
+    <!--开启注解 -->
+    <context:annotation-config/>
+    <!--配置C3P0数据源-->
+    <bean id="dataSource"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+
+        <property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+    </bean>
+        <!-- 创建SqlSessionFactory，同时指定数据源 -->
+        <!-- SqlSessionFactoryBean相当于SqlSessionFactoryBuilder -->
+        <!-- spring和MyBatis完美整合 -->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--引用配置好的数据源DataSource的bean-->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 具体指定xml文件，需mybatis全局配置文件，以此添加映射文件，可省略-->
+        <property name="mapperLocations" value="classpath*:*Mapper.xml"/>
+        </bean>
+        <!-- 扫描mapper映射文件位置，用来加载xxxMapper.xml文件，相当于 conf.xml中<mappers>。扫描到xxxMapper.xml文件后，
+        根据配置文件的namespace找到接口，通过id找到对应方法，给对应方法生成实现，最终使用动态代理生成Dao实现类，
+        即XXXMapperImpl，并把它放到spring容器中。   -->
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--
+        basePackage 属性是映射器接口文件的包路径。你可以使用分号或逗号，作为分隔符设置多于一个的包路径。指定xxxMapper.xml配置文件位置。
+        同样可以添加映射文件，不用mybatis全局配置文件   找的是SMUserMapper.class文件不是xml文件！！！！！-->
+
+        <property name="basePackage" value="com.springmybatismapper"/>
+        </bean>
+
+        <!--添加Mapper接口的bean-->
+        <bean id="userMapper"
+              class="org.mybatis.spring.mapper.MapperFactoryBean">
+            <property name="mapperInterface" value="com.springmybatismapper.SMUserMapper"></property>
+            <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+        </bean>
+        <!--自动扫描，在指定包下，若某类带有特定注解@component@repository@Servicr@controller，则会将这个对象作为bean注册到spring容器中-->
+        <context:component-scan base-package="com.springmybatismapper"/>
+         <bean id="SqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <!-- 以sqlSessionFactory为参数传入构造函数中 -->
+            <constructor-arg index="0" ref="sqlSessionFactory" />
+        </bean>
+        <!--   添加实现类Bean
+
+        <bean id="userServiceImpl" class="com.springmybatismapper.SMUserServiceImpl">
+        </bean> -->
+
+        <bean id="userService" class="com.springmybatismapper.SMUserServiceImpl">
+        </bean>
+
+</beans>
